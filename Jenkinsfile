@@ -63,8 +63,10 @@ pipeline {
                     docker compose pull db
                     docker tag "${API_IMAGE}:local" "${API_IMAGE}:${BUILD_NUMBER}"
                     docker build -f api/Dockerfile.test -t "${TEST_IMAGE}:${BUILD_NUMBER}" api
-                    echo "--- Images produced by this build"
-                    docker image ls --filter "reference=${API_IMAGE}" --filter "reference=${TEST_IMAGE}" --filter "reference=postgres"
+                    echo "--- Images of the two services (as declared in docker-compose.yml)"
+                    docker compose config --images | xargs -n 1 docker image ls
+                    echo "--- Images tagged by this build"
+                    docker image ls "${API_IMAGE}:${BUILD_NUMBER}"
                 '''
             }
         }
