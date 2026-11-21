@@ -38,7 +38,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
       # The SERVICE NAME "db" is resolved by Docker's DNS on tasks-net
       # (never localhost or a fixed IP).
-      DB_HOST: database
+      DB_HOST: db
       DB_PORT: "5432"
     ports:
       - "${API_PORT:-8000}:8000"
