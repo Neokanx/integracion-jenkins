@@ -2,6 +2,24 @@
 
 [![CI](https://github.com/sebas1621/task-manager-ci/actions/workflows/ci.yml/badge.svg)](https://github.com/sebas1621/task-manager-ci/actions/workflows/ci.yml)
 
+## Entrega 2: integración continua con Jenkins
+
+Jenkins corre en un contenedor (`jenkins/jenkins:lts` con el volumen `jenkins_home`) y ejecuta el
+`Jenkinsfile` de este repositorio con cada push (Poll SCM cada ~2 minutos): Checkout, Build de las
+imágenes de los dos servicios, Lint, pruebas unitarias y una prueba de integración que levanta el
+compose y verifica que `api` y `db` se comunican por el nombre del servicio.
+
+```bash
+cd jenkins
+cp .env.example .env          # cambiar las contraseñas por valores propios
+docker compose up -d --build  # Jenkins en http://localhost:8080 (usuario: admin)
+```
+
+- `Jenkinsfile`: el pipeline como código.
+- `jenkins/`: imagen, plugins y configuración como código (usuario, credencial y job).
+- `scripts/smoke_test.py`: verificación de la comunicación entre contenedores.
+- `docs/Entrega2_Jenkins.pdf`: documento de la entrega con las evidencias.
+
 A small task manager REST API (FastAPI + SQLAlchemy + Alembic) backed by PostgreSQL 17,
 packaged as two Docker containers orchestrated with Docker Compose. The app is a vehicle to
 demonstrate Docker, container communication and continuous integration.
