@@ -31,3 +31,5 @@ services:
 
 volumes:
   jenkins_home:
+    # Fixed name (no project prefix) so it is easy to find and back up.
+    name: jenkins_home
