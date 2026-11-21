@@ -18,7 +18,6 @@ docker compose up -d --build  # Jenkins en http://localhost:8080 (usuario: admin
 - `Jenkinsfile`: el pipeline como código.
 - `jenkins/`: imagen, plugins y configuración como código (usuario, credencial y job).
 - `scripts/smoke_test.py`: verificación de la comunicación entre contenedores.
-- `docs/Entrega2_Jenkins.pdf`: documento de la entrega con las evidencias.
 
 A small task manager REST API (FastAPI + SQLAlchemy + Alembic) backed by PostgreSQL 17,
 packaged as two Docker containers orchestrated with Docker Compose. The app is a vehicle to
