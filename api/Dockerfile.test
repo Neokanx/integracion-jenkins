@@ -1,0 +1,21 @@
+# syntax=docker/dockerfile:1
+# Test image used by the Jenkins pipeline (Lint and Unit Test stages).
+# Build context is api/ ; the ignore rules live in Dockerfile.test.dockerignore
+# (unlike the runtime image, this one DOES need the tests and the dev tooling).
+FROM python:3.12.16-slim-trixie
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /src
+
+# Dependencies first so this layer is cached until the requirements change.
+COPY requirements.txt requirements-dev.txt ./
+RUN pip install --no-cache-dir -r requirements-dev.txt
+
+COPY . .
+
+# The JUnit XML is copied out by Jenkins so it can show the test results.
+# Coverage threshold (--cov-fail-under) comes from pyproject.toml.
+RUN mkdir /reports
+CMD ["pytest", "--junitxml=/reports/junit.xml", "-p", "no:cacheprovider"]

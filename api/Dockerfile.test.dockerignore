@@ -1,0 +1,14 @@
+# Used only by Dockerfile.test (BuildKit picks <dockerfile>.dockerignore first).
+.git
+.env
+.env.*
+.venv
+venv
+__pycache__
+*.py[cod]
+.pytest_cache
+.ruff_cache
+.coverage
+.coverage.*
+coverage.xml
+htmlcov
