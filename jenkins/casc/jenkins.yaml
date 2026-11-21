@@ -1,0 +1,56 @@
+# Jenkins Configuration as Code. Secrets are placeholders resolved from the
+# container environment (jenkins/.env); no secret is stored in this file.
+jenkins:
+  systemMessage: "task-manager-ci - Entrega 2 (Integracion Continua con Jenkins)"
+  numExecutors: 2
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "admin"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+unclassified:
+  location:
+    url: "http://localhost:8080/"
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: "taskmanager-db-credentials"
+              description: "PostgreSQL user/password used by docker compose in the pipeline"
+              username: "${TM_DB_USER}"
+              password: "${TM_DB_PASSWORD}"
+
+jobs:
+  - script: >
+      pipelineJob('task-manager-ci') {
+        description('Pipeline as code: Checkout, Build, Lint, Unit Test, Integration Test (Jenkinsfile in the repository).')
+        properties {
+          pipelineTriggers {
+            triggers {
+              pollSCM {
+                scmpoll_spec('H/2 * * * *')
+              }
+            }
+          }
+        }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote { url('https://github.com/Neokanx/integracion-jenkins.git') }
+                branch('*/main')
+              }
+            }
+            scriptPath('Jenkinsfile')
+            lightweight(false)
+          }
+        }
+      }

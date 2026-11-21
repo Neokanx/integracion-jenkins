@@ -1,0 +1,22 @@
+# Plugins installed in the Jenkins image (dependencies are resolved automatically).
+# Source control
+git
+github
+# Pipeline as code
+workflow-aggregator
+pipeline-stage-view
+pipeline-graph-view
+# Docker
+docker-workflow
+docker-commons
+# Credentials and secrets
+credentials
+credentials-binding
+plain-credentials
+# Test reports, console readability, housekeeping
+junit
+timestamper
+ansicolor
+# Infrastructure as code for Jenkins itself
+configuration-as-code
+job-dsl

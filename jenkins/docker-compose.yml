@@ -1,0 +1,33 @@
+# Jenkins controller in a container (jenkins/jenkins:lts) with a persistent volume.
+#   cd jenkins && cp .env.example .env   # then edit the passwords
+#   docker compose up -d --build
+#   open http://localhost:8080
+name: jenkins-ci
+
+services:
+  jenkins:
+    build: .
+    image: task-manager-jenkins:lts
+    container_name: jenkins
+    restart: unless-stopped
+    # The Docker socket is owned by root:root (mode 660) on this host, so the
+    # unprivileged "jenkins" user joins group 0 instead of running as root.
+    group_add:
+      - "0"
+    # Admin password and the database credentials are read from jenkins/.env
+    # (git-ignored) and stored INSIDE Jenkins by casc/jenkins.yaml.
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"   # web UI
+      - "50000:50000" # inbound agents (not used here, kept for completeness)
+    volumes:
+      # Named volume: jobs, builds, credentials and plugins survive restarts.
+      - jenkins_home:/var/jenkins_home
+      # JCasC file (read-only) from the repository.
+      - ./casc:/var/jenkins_home/casc:ro
+      # The pipeline drives the host Docker daemon (docker build / compose).
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  jenkins_home:
