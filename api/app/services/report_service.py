@@ -51,7 +51,7 @@ class ReportService:
             done=sum(t.status == TaskStatus.DONE for t in tasks),
         )
         total = len(tasks)
-        percentage = round(counts.done / total * 100, 2) if total else 0.0
+        percentage = round(counts.done / total * 10, 2) if total else 0.0
         return ProjectSummary(
             project_id=project_id,
             total_tasks=total,
